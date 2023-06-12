@@ -17,7 +17,6 @@ export default {
     }
   },
   async mounted(){
-
     grid = new Grid({
       el: document.getElementById('personalContainer'),
       data: this.personalReportData,
@@ -262,7 +261,7 @@ export default {
   },
   methods:{
     async personalReport(){
-      await axios.get("https://3a41448b-2501-454a-a51f-810af056121a.mock.pstmn.io/personalReportData")
+      await axios.get("https://3a41448b-2501-454a-a51f-810af056121a.mock.pstmn.io/personalReportList")
         .then((response)=>{
           this.personalReportData = response.data;
           grid.resetData(this.personalReportData);

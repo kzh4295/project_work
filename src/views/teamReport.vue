@@ -6,14 +6,21 @@
 
 <script>
 import Grid from 'tui-grid';
-import {personalReportData} from '../data/basic-dummy.js';
-
+// import {personalReportData} from '../data/basic-dummy.js';
+import axios from "axios";
+let grid;
 export default {
   name: 'TuiGridComponent',
-  mounted(){
-    const grid = new Grid({
+  data(){
+    return{
+      teamReportData: [],
+    }
+  },
+  async mounted(){
+
+    grid = new Grid({
       el: document.getElementById('teamContainer'),
-      data: personalReportData,
+      data: this.teamReportData,
       scrollX: false,
       scrollY: false,
       header: {
@@ -250,7 +257,20 @@ export default {
         }
     }
   })
-}}
+  this.teamReport();
+  
+  },
+  methods:{
+    async teamReport(){
+      await axios.get("https://3a41448b-2501-454a-a51f-810af056121a.mock.pstmn.io/teamReportList")
+        .then((response)=>{
+          this.teamReportData = response.data;
+          grid.resetData(this.teamReportData);
+        })
+        .catch((err)=>console.log(err))
+    }
+  }
+}
 
 
 </script>

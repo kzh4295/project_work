@@ -16,14 +16,21 @@
 
 <script>
 import Grid from 'tui-grid';
-import {personalReportData, individualReportData} from '../data/basic-dummy.js';
+import axios from "axios";
+let shapeGrid, individualGrid;
 
 export default {
   name: 'TuiGridComponent',
-  mounted(){
-    const shapeGrid = new Grid({
+  data(){
+    return{
+      personalReportData: [],
+      individualReportData: [],
+    }
+  },
+  async mounted(){
+    shapeGrid = new Grid({
       el: document.getElementById('shapeContainer'),
-      data: personalReportData,
+      data: this.personalReportData,
       scrollX: false,
       scrollY: false,
       header: {
@@ -260,9 +267,45 @@ export default {
         }
     }
   })
-    const individualContainer = new Grid({
+    individualGrid = new Grid({
       el: document.getElementById('individualContainer'),
-      data: individualReportData,
+      data: [
+        {
+          "divide":"권지현'",
+          "Q1":51.5, 
+          "Q2":106,
+          "Q3":107,
+          "Q4":24,
+          "total2022":288.5,
+          "MM":1.45
+        },
+        {
+          "divide":"진소민",
+          "Q1":44, 
+          "Q2":59,
+          "Q3":110,
+          "Q4":3,
+          "total2022":216,
+        },
+        {
+          "divide":"장은지",
+          "Q1":9, 
+          "Q2":45,
+          "Q3":39,
+          "Q4":0,
+          "total2022":93,
+          "MM":1.3
+        },
+        {
+          "divide":"최재민",
+          "Q1":9, 
+          "Q2":45,
+          "Q3":39,
+          "Q4":0,
+          "total2022":93,
+          "MM":1.3
+        },
+      ],
       scrollX: false,
       scrollY: false,
       header: {
@@ -317,7 +360,29 @@ export default {
         }
     }
   })
-}}
+
+  this.personalReport();
+  this.individualReport();
+},
+methods:{
+  async personalReport(){
+      await axios.get("https://3a41448b-2501-454a-a51f-810af056121a.mock.pstmn.io/personalReportList")
+        .then((response)=>{
+          this.personalReportData = response.data;
+          shapeGrid.resetData(this.personalReportData);
+        })
+        .catch((err)=>console.log(err))
+    },
+  async individualReport(){
+    await axios.get("https://3a41448b-2501-454a-a51f-810af056121a.mock.pstmn.io/partReportList")
+      .then((response)=>{
+        this.individualReportData = response.data;
+        individualGrid.resetData(this.individualReportData);
+      })
+      .catch((err)=>console.log(err))
+    }
+  }
+}
 
 
 </script>
